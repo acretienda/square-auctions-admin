@@ -1,0 +1,1 @@
+import React from 'react';export default function Auctions(){return (<div><h3>Gestión de subastas (placeholder)</h3><p>Aquí integrarás creación/listado/borrado de subastas.</p></div>)}
