@@ -1,1 +1,25 @@
-import React from 'react';import { Routes, Route, Link } from 'react-router-dom';import Auctions from './Auctions';import Admins from './Admins';export default function Dashboard(){return (<div className="container"><div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}><h2>Admin Dashboard</h2><div><Link to="/dashboard/admins" className="btn" style={{marginRight:8}}>Admins</Link><Link to="/dashboard/auctions" className="btn">Auctions</Link></div></div><Routes><Route path="/admins" element={<Admins/>} /><Route path="/auctions" element={<Auctions/>} /></Routes></div>)}
+import React from 'react'
+import { Routes, Route, Link } from 'react-router-dom'
+import Admins from './Admins'
+import Auctions from './Auctions'
+
+export default function Dashboard(){
+  return (
+    <div className="container">
+      <div className="header">
+        <h2>Panel de Administración</h2>
+        <div className="nav">
+          <Link to="/dashboard/auctions" className="btn">Subastas</Link>
+          <Link to="/dashboard/admins" className="btn">Admins</Link>
+          <button className="btn" onClick={()=>{localStorage.removeItem('admin_token'); window.location='/'}}>Salir</button>
+        </div>
+      </div>
+
+      <Routes>
+        <Route path="admins" element={<Admins/>} />
+        <Route path="auctions" element={<Auctions/>} />
+        <Route path="*" element={<Auctions/>} />
+      </Routes>
+    </div>
+  )
+}
