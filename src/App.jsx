@@ -1,23 +1,32 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import Navbar from "./components/Navbar";
+import React, { useState } from 'react'
+import axios from 'axios'
 
-function App(){
-  const token = localStorage.getItem("token");
+function App() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [message, setMessage] = useState('')
+
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    try {
+      const res = await axios.post('/api/auth/login', { email, password })
+      setMessage('✅ Login exitoso: ' + JSON.stringify(res.data))
+    } catch (err) {
+      setMessage('❌ Login fallido: ' + err.message)
+    }
+  }
 
   return (
-    <Router>
-      <Navbar />
-      <div className="container">
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={token ? <Dashboard /> : <Navigate to="/login" />} />
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-      </div>
-    </Router>
-  );
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '5rem' }}>
+      <h1>Square Auctions - Panel Admin</h1>
+      <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', width: '300px', gap: '10px' }}>
+        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <button type="submit">Iniciar sesión</button>
+      </form>
+      {message && <p>{message}</p>}
+    </div>
+  )
 }
 
-export default App;
+export default App
