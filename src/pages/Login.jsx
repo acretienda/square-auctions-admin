@@ -1,37 +1,68 @@
-import React, {useState} from 'react'
-import { useNavigate } from 'react-router-dom'
-import { loginAdmin } from '../services/api'
+import { useState } from "react";
+import axios from "axios";
 
-export default function Login({ onLogin }){
-  const [identifier,setIdentifier] = useState('admin@example.com')
-  const [password,setPassword] = useState('admin123')
-  const [loading,setLoading] = useState(false)
-  const nav = useNavigate()
+const API_URL = import.meta.env.VITE_API_URL || "https://square-auctions.onrender.com";
 
-  async function submit(e){
+export default function Login({ onLogin }) {
+  const [email, setEmail] = useState("admin@example.com");
+  const [password, setPassword] = useState("admin123");
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true)
-    try{
-      const r = await loginAdmin({ identifier, password });
-      localStorage.setItem('admin_token', r.data.token);
-      onLogin && onLogin();
-      nav('/dashboard/auctions');
-    }catch(err){
-      alert('Login fallido: ' + (err.response?.data?.error || err.message));
-    }finally{ setLoading(false) }
-  }
+    setError("");
+
+    try {
+      const res = await axios.post(`${API_URL}/api/auth/login`, {
+        email,
+        password,
+      });
+
+      // Guardamos token en localStorage
+      localStorage.setItem("token", res.data.token);
+
+      // Callback opcional para notificar al padre
+      if (onLogin) onLogin(res.data.token);
+
+      // Redirigimos al panel
+      window.location.href = "/dashboard";
+    } catch (err) {
+      setError(err.response?.data?.error || "Error al iniciar sesión");
+    }
+  };
 
   return (
-    <div className="container" style={{maxWidth:420, marginTop:80}}>
-      <h2>Acceso Administrador</h2>
-      <form onSubmit={submit}>
-        <label>Usuario o Email</label>
-        <input className="input" value={identifier} onChange={e=>setIdentifier(e.target.value)} />
-        <label>Contraseña</label>
-        <input type="password" className="input" value={password} onChange={e=>setPassword(e.target.value)} />
-        <div style={{marginTop:10}}><button className="btn" type="submit" disabled={loading}>{loading? 'Entrando...':'Entrar'}</button></div>
+    <div style={{ maxWidth: "400px", margin: "50px auto", textAlign: "center" }}>
+      <h2>Panel de Administración</h2>
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: "10px" }}>
+          <input
+            type="email"
+            placeholder="Correo"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            style={{ width: "100%", padding: "10px" }}
+          />
+        </div>
+        <div style={{ marginBottom: "10px" }}>
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            style={{ width: "100%", padding: "10px" }}
+          />
+        </div>
+        <button
+          type="submit"
+          style={{ width: "100%", padding: "10px", cursor: "pointer" }}
+        >
+          Ingresar
+        </button>
       </form>
-      <p className="small">Usuario por defecto: <b>admin@example.com</b> / Contraseña: <b>admin123</b></p>
+      {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
     </div>
-  )
+  );
 }
