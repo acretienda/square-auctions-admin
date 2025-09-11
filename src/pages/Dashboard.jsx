@@ -1,31 +1,89 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import axios from "axios";
 
-export default function Dashboard() {
-  const [token, setToken] = useState(localStorage.getItem("token"));
+function Dashboard() {
+  const [auctionName, setAuctionName] = useState("");
+  const [adminEmail, setAdminEmail] = useState("");
+  const [adminPassword, setAdminPassword] = useState("");
 
-  useEffect(() => {
-    if (!token) {
-      // Si no hay token, redirigimos al login
-      window.location.href = "/login";
+  const API_URL = "https://square-auctions.onrender.com/api";
+
+  // Crear Subasta
+  const handleCreateAuction = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(`${API_URL}/auctions`, { name: auctionName });
+      alert("✅ Subasta creada correctamente");
+      setAuctionName("");
+    } catch (error) {
+      console.error(error);
+      alert("❌ Error al crear la subasta");
     }
-  }, [token]);
+  };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
-    window.location.href = "/login";
+  // Crear Admin
+  const handleCreateAdmin = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(`${API_URL}/admins`, {
+        email: adminEmail,
+        password: adminPassword,
+      });
+      alert("✅ Administrador creado correctamente");
+      setAdminEmail("");
+      setAdminPassword("");
+    } catch (error) {
+      console.error(error);
+      alert("❌ Error al crear el administrador");
+    }
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h2>Bienvenido al Panel de Administración</h2>
-      <p>Has iniciado sesión correctamente ✅</p>
-      <button
-        onClick={handleLogout}
-        style={{ marginTop: "20px", padding: "10px 20px", cursor: "pointer" }}
-      >
-        Cerrar sesión
-      </button>
+    <div style={{ padding: "20px" }}>
+      <h1>Panel de Control</h1>
+
+      {/* Crear Subasta */}
+      <section style={{ marginBottom: "30px" }}>
+        <h2>Crear Subasta</h2>
+        <form onSubmit={handleCreateAuction}>
+          <input
+            type="text"
+            placeholder="Nombre de la subasta"
+            value={auctionName}
+            onChange={(e) => setAuctionName(e.target.value)}
+            required
+          />
+          <button type="submit" style={{ marginLeft: "10px" }}>
+            Crear
+          </button>
+        </form>
+      </section>
+
+      {/* Crear Administrador */}
+      <section>
+        <h2>Crear Administrador</h2>
+        <form onSubmit={handleCreateAdmin}>
+          <input
+            type="email"
+            placeholder="Email del administrador"
+            value={adminEmail}
+            onChange={(e) => setAdminEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={adminPassword}
+            onChange={(e) => setAdminPassword(e.target.value)}
+            required
+          />
+          <button type="submit" style={{ marginLeft: "10px" }}>
+            Crear
+          </button>
+        </form>
+      </section>
     </div>
   );
 }
+
+export default Dashboard;
