@@ -1,15 +1,12 @@
-Panel de administración (Vite + React) - español
+Panel admin simple (React + Vite) - listo para producción
 
-Cómo usar:
-- Instalar dependencias: npm install
-- Desarrollo: npm run dev
-- Build: npm run build (publicar carpeta dist en Render)
-- Asegúrate de configurar la variable VITE_API_BASE_URL apuntando a tu backend, por ejemplo:
-  VITE_API_BASE_URL=https://square-auctions.onrender.com
+Instrucciones rápidas:
+1. Copia el contenido de .env.example a un archivo .env y ajusta VITE_API_URL si es necesario.
+2. Subir al repo `square-auctions-admin` y desplegar en Render como Web Service o Static Site.
+3. Render ejecutará `npm install && npm run build && npm start`.
+4. Accede al panel con admin: admin@example.com / admin123
 
-Endpoints requeridos en el backend:
-- POST /api/admin/login { identifier, password } -> { token }
-- GET /api/admin (protegido) -> lista admins
-- POST /api/admin (protegido) { email, username, password } -> crear admin
-- DELETE /api/admin/:id (protegido) -> borrar admin
-- CRUD de subastas en /api/auctions -> (opcional, debes implementar en backend)
+Rutas que espera el backend:
+- POST {VITE_API_URL}/admin/login  -> { identifier, password } -> { token }
+- GET {VITE_API_URL}/admins -> lista de admins (protegido con Bearer token)
+- GET {VITE_API_URL}/auctions -> lista de subastas

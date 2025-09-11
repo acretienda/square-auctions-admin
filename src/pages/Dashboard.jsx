@@ -1,7 +1,7 @@
 import React from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
-import Admins from './Admins'
-import Auctions from './Auctions'
+import AdminsList from './AdminsList'
+import AuctionsList from './AuctionsList'
 
 export default function Dashboard(){
   return (
@@ -16,9 +16,9 @@ export default function Dashboard(){
       </div>
 
       <Routes>
-        <Route path="admins" element={<Admins/>} />
-        <Route path="auctions" element={<Auctions/>} />
-        <Route path="*" element={<Auctions/>} />
+        <Route path="admins" element={<AdminsList/>} />
+        <Route path="auctions" element={<AuctionsList/>} />
+        <Route path="*" element={<AuctionsList/>} />
       </Routes>
     </div>
   )

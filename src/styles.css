@@ -1,7 +1,8 @@
-body{font-family:Inter,Arial,Helvetica,sans-serif;background:#f4f6fb;margin:0}
+:root{--blue:#2563eb;--bg:#f4f6fb}
+body{font-family:Inter,Arial,Helvetica,sans-serif;background:var(--bg);margin:0}
 .container{max-width:1000px;margin:36px auto;padding:20px;background:#fff;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,0.06)}
 .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.btn{background:#2563eb;color:#fff;padding:8px 12px;border-radius:6px;border:none;cursor:pointer}
+.btn{background:var(--blue);color:#fff;padding:8px 12px;border-radius:6px;border:none;cursor:pointer}
 .input{width:100%;padding:8px;border-radius:6px;border:1px solid #ddd;margin:6px 0}
 .table{width:100%;border-collapse:collapse;margin-top:12px}
 .table th,.table td{border:1px solid #eee;padding:8px;text-align:left}

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
@@ -10,10 +10,11 @@ function RequireAuth({ children }){
 }
 
 export default function App(){
+  const [reloadKey, setReloadKey] = useState(0)
   return (
     <Routes>
-      <Route path="/" element={<Login/>} />
-      <Route path="/dashboard/*" element={<RequireAuth><Dashboard/></RequireAuth>} />
+      <Route path="/" element={<Login onLogin={()=>setReloadKey(k=>k+1)} />} />
+      <Route path="/dashboard/*" element={<RequireAuth><Dashboard key={reloadKey}/></RequireAuth>} />
     </Routes>
   )
 }
