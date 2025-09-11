@@ -1,32 +1,19 @@
-import React, { useState } from 'react'
-import axios from 'axios'
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [message, setMessage] = useState('')
-
-  const handleLogin = async (e) => {
-    e.preventDefault()
-    try {
-      const res = await axios.post('/api/auth/login', { email, password })
-      setMessage('✅ Login exitoso: ' + JSON.stringify(res.data))
-    } catch (err) {
-      setMessage('❌ Login fallido: ' + err.message)
-    }
-  }
+  const token = localStorage.getItem("token");
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '5rem' }}>
-      <h1>Square Auctions - Panel Admin</h1>
-      <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', width: '300px', gap: '10px' }}>
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <button type="submit">Iniciar sesión</button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={!token ? <Login /> : <Navigate to="/dashboard" />} />
+        <Route path="/dashboard" element={token ? <Dashboard /> : <Navigate to="/" />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
