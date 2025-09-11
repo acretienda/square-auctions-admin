@@ -1,20 +1,27 @@
-import React, { useState } from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
-import Login from './pages/Login'
-import Dashboard from './pages/Dashboard'
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 
-function RequireAuth({ children }){
-  const token = localStorage.getItem('admin_token');
-  if(!token) return <Navigate to="/" replace />
-  return children
-}
+function App() {
+  const token = localStorage.getItem("token");
 
-export default function App(){
-  const [reloadKey, setReloadKey] = useState(0)
   return (
-    <Routes>
-      <Route path="/" element={<Login onLogin={()=>setReloadKey(k=>k+1)} />} />
-      <Route path="/dashboard/*" element={<RequireAuth><Dashboard key={reloadKey}/></RequireAuth>} />
-    </Routes>
-  )
+    <Router>
+      <Routes>
+        {/* Ruta de login */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Ruta protegida */}
+        <Route
+          path="/dashboard"
+          element={token ? <Dashboard /> : <Navigate to="/login" />}
+        />
+
+        {/* Redirigir cualquier ruta desconocida al login */}
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+    </Router>
+  );
 }
+
+export default App;
